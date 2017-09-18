@@ -1,5 +1,4 @@
 
-
 secrets_lower = "_."
 secrets_upper = " |"
 
@@ -44,21 +43,10 @@ def split_rec_two(seq, res_low = "", res_high = ""):
     elif seq[0].islower() or seq[0] in secrets_lower:
         res_low += seq[0]
         return split_rec_two(seq[1:], res_low, res_high)
-    
+
     elif seq[0].isupper() or seq[0] in secrets_upper:
         res_high += seq[0]
         return split_rec_two(seq[1:], res_low, res_high)
-    
+
     else:
         return split_rec_two(seq[1:], res_low, res_high)
-    
-
-
-
-
-
-
-
-
-
-
