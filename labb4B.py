@@ -37,6 +37,8 @@ def interpret(expr, dic):
                 return interpret([interpret(expr[0], dic), "AND", "true"], dic)
             elif is_list(expr[2]) and (expr[0] == "true" or dic_true_checker(expr, dic, 0) == "true"):
                 return interpret(["true", "AND", interpret(expr[2], dic)], dic)
+            elif is_list(expr[0]) and is_list(expr[2]):
+                return interpret([interpret(expr[0], dic), "AND", interpret(expr[2], dic)], dic)
             else:
                 return "false"
         elif expr[1] == "OR":
@@ -44,6 +46,8 @@ def interpret(expr, dic):
                 return interpret([interpret(expr[0], dic), "OR", expr[2]], dic)
             elif is_list(expr[2]):
                 return interpret([expr[0], "OR", interpret(expr[2], dic)], dic)
+            elif is_list(expr[0]) and is_list(expr[2]):
+                return interpret([interpret(expr[0], dic), "OR", interpret(expr[2], dic)], dic)
             elif (expr[0] == "true" or dic_true_checker(expr, dic, 0) == "true") or (expr[2] == "true" or dic_true_checker(expr, dic, 2) == "true"):
                 return "true"
             else:
