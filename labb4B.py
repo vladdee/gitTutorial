@@ -40,6 +40,8 @@ def or_doer(expr, dic):
         return interpret([expr[0], "OR", interpret(expr[2], dic)], dic)
     elif (expr[0] == "true" or dic_true_checker(expr, dic, 0) == "true") or (expr[2] == "true" or dic_true_checker(expr, dic, 2) == "true"):
         return "true"
+    else:
+        return "false"
 
 def interpret(expr, dic):
     if isinstance(expr, str):
