@@ -12,8 +12,6 @@ def dic_true_checker(expr, dic, index):
                 return "true"
             else:
                 return "false"
-    else:
-        return "false"
 
 def not_doer(expr, dic):
     if is_list(expr[1]):
