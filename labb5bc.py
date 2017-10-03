@@ -22,7 +22,7 @@ def pixel_constraint(hlow, hhigh, slow, shigh, vlow, vhigh):
             return False
     return checker
 
-def generator1(index):
+def generator1():
     val = random.random() * 255 if random.random() > 0.99 else 0
     return (val, val, val)
 
@@ -35,3 +35,14 @@ plane_rgb_list = cvimg_to_list(plane_rgb)
 generator2 = generator_from_image(plane_rgb_list)
 
 def combine_images(hsv_img, condition, gen1, gen2):
+    """hsv_img är den normala bilden
+       condition är definitionen av den blå färgen
+       gen1 är random stjärna generatorn
+       gen2 är funktion som kan generera rgb pixlar?
+    """
+    is_sky = pixel_constraint(5, 30, 50, 255, 100, 255)
+    blw = [(0, 0, 255) if is_sky(x) else (0, 0, 0) for x in hsv_img]
+    night_sky = [gen1() if i == (0, 0, 255) else hsv_list[x] for i, x in enumerate(blw)]
+    
+
+"""först tar vi och jämför den svartvita och normalfärgade bilden, för varje pixel i den svartvita som är vit kör vi den genom gen1 och får antingen en vit eller svart pixel(oftast svart). För varje svart tar vi dens motsvarighet i den normala bilden"""
