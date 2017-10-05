@@ -23,8 +23,20 @@ def pixel_constraint(hlow, hhigh, slow, shigh, vlow, vhigh):
     return checker
 
 def generator1():
-    val = random.random() * 255 if random.random() > 0.99 else 0
-    return (val, val, val)
+    if random.random() > 0.99:
+        return (0, 0, 255)
+    else:
+        return (0, 0, 0)
+
+def hsvlist_to_array(lst, width):
+    img = []
+    for i, x in enumerate(lst):
+        if i % width == 0:
+            img.append([x])
+        else:
+            img[-1].append(x)
+    img_np = numpy.asarray(img, numpy.uint8)
+    return img_np
 
 plane_rgb = cv2.imread("plane.jpg")
 plane_hsv = cv2.cvtColor(cv2.imread("plane.jpg"), cv2.COLOR_RGB2HSV)
@@ -32,7 +44,7 @@ condition = pixel_constraint(5, 30, 50, 255, 100, 255)
 plane_hsv_list = cvimg_to_list(plane_hsv)
 plane_rgb_list = cvimg_to_list(plane_rgb)
 
-generator2 = generator_from_image(plane_rgb_list)
+generator2 = generator_from_image(plane_hsv_list)
 
 def combine_images(hsv_img, condition, gen1, gen2):
     """hsv_img är den normala bilden
@@ -42,7 +54,9 @@ def combine_images(hsv_img, condition, gen1, gen2):
     """
     is_sky = pixel_constraint(5, 30, 50, 255, 100, 255)
     blw = [(0, 0, 255) if is_sky(x) else (0, 0, 0) for x in hsv_img]
-    night_sky = [gen1() if i == (0, 0, 255) else hsv_list[x] for i, x in enumerate(blw)]
-    
+    night_sky = [gen1() if x == (0, 0, 255) else hsv_img[i] for i, x in enumerate(blw)]
 
-"""först tar vi och jämför den svartvita och normalfärgade bilden, för varje pixel i den svartvita som är vit kör vi den genom gen1 och får antingen en vit eller svart pixel(oftast svart). För varje svart tar vi dens motsvarighet i den normala bilden"""
+    night_pic = hsvlist_to_array(night_sky, 640)
+    rgb_pic = cv2.cvtColor(night_pic, cv2.COLOR_HSV2RGB)
+    cv2.imshow("night", rgb_pic)
+    cv2.waitKey(0)
