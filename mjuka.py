@@ -39,35 +39,26 @@ def hsvlist_to_array(lst, width):
     return img_np
 
 def gradient_condition(tupl):
-    if tupl[2] == 255:
+    if all(x == 255 for x in tupl):
         return 1
-    elif tupl[2] == 0:
+    elif all(x == 0 for x in tupl):
         return 0
     else:
         return tupl[2]/256
 
-plane_rgb = cv2.imread("plane.jpg")
-plane_hsv = cv2.cvtColor(cv2.imread("plane.jpg"), cv2.COLOR_RGB2HSV)
-condition = pixel_constraint(5, 30, 50, 255, 100, 255)
-plane_hsv_list = cvimg_to_list(plane_hsv)
-plane_rgb_list = cvimg_to_list(plane_rgb)
+grad_rgb_list = cvimg_to_list(cv2.imread("gradient.jpg"))
+plane_rgb_list = cvimg_to_list(cv2.imread("plane.jpg"))
+flowers_rgb_list = cvimg_to_list(cv2.imread("flowers.jpg"))
 
-generator2 = generator_from_image(plane_hsv_list)
+gen2 = generator_from_image(plane_rgb_list)
+gen1 = generator_from_image(flowers_rgb_list)
 
-#combination
-
-
-def combine_images(hsv_img, condition, gen1, gen2):
-    """hsv_img är den normala bilden
-       condition är definitionen av den blå färgen
-       gen1 är random stjärna generatorn
-       gen2 är funktion som kan generera rgb pixlar?
-    """
-    is_sky = pixel_constraint(5, 30, 50, 255, 100, 255)
-    blw = [(0, 0, 255) if is_sky(x) else (0, 0, 0) for x in hsv_img]
-    night_sky = [gen1() if x == (0, 0, 255) else generator2(i) for i, x in enumerate(blw)]
-
-    night_pic = hsvlist_to_array(night_sky, 640)
-    rgb_pic = cv2.cvtColor(night_pic, cv2.COLOR_HSV2RGB)
-    cv2.imshow("night", rgb_pic)
+def combine_images_2(rgb_img, gen1, gen2):
+    blended = []
+    for i, x in enumerate(grad_rgb_list):
+        cond1 = gradient_condition(x)
+        cond2 = 1 - gradient_condition(x)
+        blended.append((gen1(i)[0]*cond1 + gen2(i)[0]*cond2, gen1(i)[1]*cond1 + gen2(i)[1]*cond2, gen1(i)[2]*cond1 + gen2(i)[2]*cond2))
+    image = hsvlist_to_array(blended, 640)
+    cv2.imshow("lol", image)
     cv2.waitKey(0)
