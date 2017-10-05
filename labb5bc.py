@@ -54,7 +54,7 @@ def combine_images(hsv_img, condition, gen1, gen2):
     """
     is_sky = pixel_constraint(5, 30, 50, 255, 100, 255)
     blw = [(0, 0, 255) if is_sky(x) else (0, 0, 0) for x in hsv_img]
-    night_sky = [gen1() if x == (0, 0, 255) else hsv_img[i] for i, x in enumerate(blw)]
+    night_sky = [gen1() if x == (0, 0, 255) else generator2(i) for i, x in enumerate(blw)]
 
     night_pic = hsvlist_to_array(night_sky, 640)
     rgb_pic = cv2.cvtColor(night_pic, cv2.COLOR_HSV2RGB)
