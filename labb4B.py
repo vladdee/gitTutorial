@@ -16,14 +16,14 @@ def NOT(value):
     else:
         return "true"
 
-def OR(value0, value1):
-    if value0 == "true" or value1 == "true":
+def OR(value1, value2):
+    if value1 == "true" or value2 == "true":
         return "true"
     else:
         return "false"
 
-def AND(value0, value1):
-    if value0 == "true" and value1 == "true":
+def AND(value1, value2):
+    if value1 == "true" and value2 == "true":
         return "true"
     else:
         return "false"
